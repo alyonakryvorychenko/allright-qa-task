@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { QuizDriver } from './helpers/QuizDriver';
+import { QuizDriver } from '../helpers/QuizDriver';
 
 const QUIZ_URL = 'https://stage.allright.com/uk/app/sign-up/long/charlie/age-range';
 
