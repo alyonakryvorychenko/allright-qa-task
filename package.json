@@ -6,13 +6,16 @@
   "scripts": {
     "postinstall": "playwright install chromium",
     "test": "playwright test",
-    "test:report": "playwright show-report"
+    "test:report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@playwright/test": "^1.62.0"
+    "@playwright/test": "^1.62.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
   }
 }
