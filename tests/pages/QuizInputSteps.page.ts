@@ -25,6 +25,8 @@ export class QuizInputSteps {
   readonly userRoleModal: Locator;
   readonly userRoleParentBtn: Locator;
 
+  private userEmail = '';
+
   constructor(page: Page) {
     this.inputField = page.locator(INPUT_FIELD);
     this.inputPhoneField = page.locator(INPUT_PHONE_FIELD);
@@ -43,6 +45,10 @@ export class QuizInputSteps {
       'user-info-email': generateTestEmail(),
     };
     const value = INPUT_VALUES[suffix];
+
+    if (suffix === 'user-info-email') {
+      this.userEmail = value;
+    }
 
     if (suffix === 'user-info-phone') {
       await this.fillPhoneField(value);
@@ -75,5 +81,9 @@ export class QuizInputSteps {
   async selectUserRoleInModal(): Promise<void> {
     await this.userRoleModal.waitFor({ state: 'visible', timeout: CLICK_TIMEOUT });
     await this.userRoleParentBtn.click({ timeout: CLICK_TIMEOUT });
+  }
+
+  getUserEmail(): string {
+    return this.userEmail;
   }
 }

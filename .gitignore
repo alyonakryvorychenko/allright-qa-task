@@ -3,3 +3,4 @@ test-results/
 playwright-report/
 .playwright-mcp/
 .DS_Store
+tests/old-code/

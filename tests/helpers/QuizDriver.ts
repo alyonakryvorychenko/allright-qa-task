@@ -55,6 +55,10 @@ export class QuizDriver {
     await this.cookieBanner.accept();
   }
 
+  getUserEmail(): string {
+    return this.inputSteps.getUserEmail();
+  }
+
   private currentSuffix(): string {
     return new URL(this.page.url()).pathname.split('/').pop() ?? '';
   }
@@ -63,6 +67,8 @@ export class QuizDriver {
     await expect(this.page, 'Page did not settle on a quiz URL before answering')
       .toHaveURL(QUIZ_BASE_URL_PATTERN, { timeout: CLICK_TIMEOUT });
     await this.page.waitForLoadState('load');
+
+    if (this.dashboard.isTerminalPage()) return;
 
     const suffix = this.currentSuffix();
     const handler = this.handlers.find((h) => h.pages.includes(suffix));
@@ -94,6 +100,9 @@ export class QuizDriver {
 
       const urlBefore = this.page.url();
       await this.answerCurrentQuestion();
+
+      if (this.dashboard.isTerminalPage()) break;
+
       await expect(this.page, `Step ${step + 1}: URL did not change after answering "${urlBefore}"`)
         .not.toHaveURL(urlBefore, { timeout: CLICK_TIMEOUT });
     }
