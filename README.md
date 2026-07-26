@@ -1,83 +1,5 @@
 # Allright QA Task — Quiz Booking E2E Test
 
-Playwright (TypeScript) end-to-end тест, який проходить квіз реєстрації на
-`https://stage.allright.com/uk/app/sign-up/long/charlie/age-range` від початку
-до кінця та перевіряє, що користувача успішно доведено до бронювання пробного
-уроку (сторінка dashboard або A/B-варіант `request-gotten`).
-
-Папка `tests/old-code/` містить початкову JS-версію тесту і в аналіз/рефакторинг
-не входить.
-
-## Структура проекту
-
-```
-tests/
-  quiz-booking.spec.ts        # сам тест
-  helpers/
-    QuizDriver.ts              # оркестратор проходження квізу (визначає тип кроку і викликає потрібний page object)
-    test-data.ts               # генерація тестового email/телефону
-  pages/                       # Page Object'и для окремих екранів квізу
-    CookieBanner.page.ts
-    QuizChoiceSteps.page.ts     # кроки з вибором варіанту (stack/info/image/hobby)
-    QuizInputSteps.page.ts      # кроки з текстовим вводом (ім'я, телефон, email)
-    LessonBookingSteps.page.ts  # вибір часу уроку
-    DashboardPage.page.ts       # фінальна сторінка (dashboard / request-gotten)
-```
-
-## Встановлення
-
-```bash
-npm install
-```
-
-(`postinstall` сам підтягує Chromium для Playwright.)
-
-## Запуск тестів
-
-```bash
-npm test                 # прогнати всі тести (headed, chromium — див. playwright.config.js)
-npm run test:report      # відкрити останній HTML-звіт
-npm run typecheck        # перевірити типи без запуску тестів
-```
-
-Запустити конкретний файл або тест:
-
-```bash
-npx playwright test tests/quiz-booking.spec.ts
-npx playwright test -g "Quiz completion creates user"
-```
-
-Тести не паралеляться (`fullyParallel: false`, `workers: 1`) і йдуть у headed-режимі —
-це налаштовано в `playwright.config.js`.
-
-## Що б зробив далі за наявності більше часу
-
-- **Перевірка на боці адмінки**: після проходження квізу заходити в адмін-панель,
-  знаходити користувача за тестовим email/телефоном і перевіряти, що він
-  доданий до бази і для нього створено час пробного дзвінка/уроку.
-- **Очищення даних після тесту**: у хуці `afterEach`/`afterAll` видаляти
-  щойно створеного тестового користувача з бази через адмінку (або
-  адмін API), щоб тести не засмічували продакшн/стейдж базу даних.
-- **Валідація номера телефона**: перевірити, що поле не приймає порожнє
-  значення, не приймає літери, і що кількість символів відповідає формату,
-  очікуваному для обраної країни.
-- **Валідація email**: перевірити коректність формату email (базові невалідні
-  кейси — без `@`, без домену тощо).
-- **Перевірка на дублікати**: переконатись, що для email/телефону, які вже
-  зареєстровані в системі, квіз коректно обробляє цю ситуацію (повідомлення
-  про помилку/інша поведінка), а не мовчки створює дубль.
-- **Покриття альтернативних гілок квізу**: зараз тест завжди обирає перший
-  варіант відповіді (`stackFirstAnswer.first()` у `QuizChoiceSteps`), включно з
-  роллю "я не батько, а дитина". Варто параметризувати `QuizDriver`/тест, щоб
-  прогонятись і по інших варіантах вибору, а не лише по "щасливому шляху".
-- **Перевірка збереження даних в адмінці**: звірити, що всі введені під час
-  квізу значення (ім'я дитини, ім'я батьків, телефон, email, обрані відповіді)
-  коректно та без спотворень збереглися в картці користувача в адмін-панелі.
-
----
-
-# English version
-
 Playwright (TypeScript) end-to-end test that walks through the sign-up quiz at
 `https://stage.allright.com/uk/app/sign-up/long/charlie/age-range` from start
 to finish and verifies the user is successfully taken to booking a trial
@@ -146,6 +68,7 @@ headed mode — configured in `playwright.config.js`.
   including always choosing the "parent" role rather than "child". The
   `QuizDriver`/test should be parameterized to also run through other answer
   choices, not just the happy path.
+- **Integrate AI to automatically determine the answer selection during quiz execution**: this will allow the    quiz to follow different paths on each run while keeping the automation code clean and avoiding excessive  hardcoded decision logic.
 - **Verify data persistence in the admin panel**: cross-check that all values
   entered during the quiz (child's name, parent's name, phone, email, chosen
   answers) are saved correctly and without corruption on the user's record in
