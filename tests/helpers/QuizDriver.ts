@@ -90,6 +90,8 @@ export class QuizDriver {
     const totalQuizSteps = await this.getTotalQuizSteps();
 
     for (let step = 0; step < totalQuizSteps; step++) {
+      if (this.dashboard.isTerminalPage()) break;
+
       const urlBefore = this.page.url();
       await this.answerCurrentQuestion();
       await expect(this.page, `Step ${step + 1}: URL did not change after answering "${urlBefore}"`)
