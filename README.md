@@ -1,6 +1,4 @@
-# Allright QA Task — Quiz Booking E2E Test
-
-## Approach
+# Part A — Approach
 
 To build reliable automated coverage for this quiz, I would focus on validating the final business outcome rather than a fixed sequence of quiz steps. The primary goal of the test is to verify that, after completing the quiz, a user account is successfully created and a trial lesson is booked.
 
@@ -27,6 +25,8 @@ The framework should dynamically determine both the page type and the total numb
 In the CI/CD pipeline, I would run the end-to-end test on every Pull Request to detect regressions as early as possible. In addition, I would schedule nightly runs to continuously validate different A/B variants and identify issues in the staging environment.
 
 The main risks of this approach are unexpected UI changes, incorrect AI decisions when encountering completely new page types, and the accumulation of test data in the staging environment. To mitigate these risks, I would implement test monitoring, add fallback logic when AI cannot determine the page type, and regularly clean up test data (for example, by removing test users on a scheduled basis).
+
+# Part B — Implementation
 
 Playwright (TypeScript) end-to-end test that walks through the sign-up quiz at
 `https://stage.allright.com/uk/app/sign-up/long/charlie/age-range` from start
