@@ -1,5 +1,33 @@
 # Allright QA Task — Quiz Booking E2E Test
 
+## Approach
+
+To build reliable automated coverage for this quiz, I would focus on validating the final business outcome rather than a fixed sequence of quiz steps. The primary goal of the test is to verify that, after completing the quiz, a user account is successfully created and a trial lesson is booked.
+
+Deterministic tests should validate only the critical business logic that always has a predictable expected result:
+
+- User account creation.
+- Trial lesson booking.
+- Correct API behavior.
+- Navigation between pages.
+- Form validation.
+- Absence of critical JavaScript and API errors.
+
+I would use AI only for areas where the logic changes frequently and hardcoding would make the tests difficult to maintain:
+
+- Identifying the type of a new screen.
+- Selecting an appropriate answer for new A/B test variations.
+- Adapting to changes in the quiz structure.
+- Recognizing new or modified question types and choosing the most appropriate action.
+
+At the same time, I would not validate the exact order of quiz steps, question texts, or marketing content, since these elements frequently change as part of A/B testing and do not affect the core business outcome. Covering them would only make the tests brittle and increase maintenance costs.
+
+The framework should dynamically determine both the page type and the total number of quiz steps instead of relying on hardcoded logic. Using the Page Object Model together with dedicated handlers for each page type would allow the automation to support new A/B variations with minimal code changes.
+
+In the CI/CD pipeline, I would run the end-to-end test on every Pull Request to detect regressions as early as possible. In addition, I would schedule nightly runs to continuously validate different A/B variants and identify issues in the staging environment.
+
+The main risks of this approach are unexpected UI changes, incorrect AI decisions when encountering completely new page types, and the accumulation of test data in the staging environment. To mitigate these risks, I would implement test monitoring, add fallback logic when AI cannot determine the page type, and regularly clean up test data (for example, by removing test users on a scheduled basis).
+
 Playwright (TypeScript) end-to-end test that walks through the sign-up quiz at
 `https://stage.allright.com/uk/app/sign-up/long/charlie/age-range` from start
 to finish and verifies the user is successfully taken to booking a trial
